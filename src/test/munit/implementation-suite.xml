@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-suite.xml" />
+	<munit:test name="delete_by_noteid-test" doc:id="1c765f7b-726a-4e64-a46b-e6f6007e4b8d" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Delete" doc:id="b3aade65-2202-4287-91e0-6fa97d2a83a1" processor="db:delete">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9fa136d9-c837-4635-a6a2-97bfca712abb" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://deletebynoteidtest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://deletebynoteidtest\mock_variable_.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="4a13459d-92e1-48b2-a9eb-ffc7af295e7d" >
+				<munit:payload value="#[readUrl('classpath://deletebynoteidtest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://deletebynoteidtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://deletebynoteidtest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to delete_by_noteid" doc:id="445b7f9f-6806-4ad9-8418-e0d90112ac59" name="delete_by_noteid"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="2c05377c-45a8-49ef-896c-630ba7d3eea3" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import deletebynoteidtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="7be8bd87-eb1e-42a5-b202-3a2475bd397d" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="26a7f120-dd34-482f-a151-c0ed716b5766" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="post_notes-test" doc:id="ecd62bab-c218-4058-a20d-8d1fcb766b0b" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Insert" doc:id="a8ded81c-f068-4d27-a176-40f34441c0e9" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="d3f57103-4b94-479d-a294-7bd73b54c786" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://postnotestest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://postnotestest\mock_variable_.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="c0af0631-7062-445b-ae69-a0eb64cf2438" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://postnotestest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://postnotestest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://postnotestest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to post_notes" doc:id="eda6a8cf-9b02-4564-8731-3856470ae934" name="post_notes"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="7992bc7b-8fc1-4169-bdbe-3683112dc42c" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import postnotestest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="377d7c20-f02e-4852-8e07-54337e270f12" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="e187551f-a4b9-452b-8fba-6b90d288c3e6" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="get_by_noteid-test" doc:id="34b15bc7-eea2-4bea-a09c-7a809c0a68e3" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="be3ba5d7-25bc-46ef-908e-80d4fe197859" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a5dd5829-7051-4ef1-a205-9171e65c349e" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://getbynoteidtest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://getbynoteidtest\mock_variable_.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="6817d43e-4a43-4cb0-9f7f-ceed3ec35599" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://getbynoteidtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://getbynoteidtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://getbynoteidtest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get_by_noteid" doc:id="aeae54ba-ced3-4ce9-9c4b-ed69f2bed51c" name="get_by_noteid"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="9b2d6199-568e-41de-972a-5ef318e72c6b" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import getbynoteidtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="6f7db4ff-d85c-42b6-923c-b2aebe8957fb" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="4eeeb469-07a0-4093-a55d-847e92eb90b7" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="fa59ae52-9895-43da-ad8b-91b6a5312b08" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="7cfe8723-ff72-49f8-b684-4c5f72bb5771" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="select_notes-test" doc:id="b880660c-9285-48dd-bec6-076cb4ac61e8" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="9a9c04bb-1e2d-4a4e-bfc4-010cfb55de8e" processor="db:select">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="310827fa-7f68-4a97-9375-30e19d09ea30" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://selectnotestest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://selectnotestest\mock_variable_.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="93769f46-63f5-4b4d-861c-956b11fa4867" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://selectnotestest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://selectnotestest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://selectnotestest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to select_notes" doc:id="af74cf50-5347-4b7b-95dc-ef2af5761775" name="select_notes"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="e2288608-bc3c-472a-8523-3c56fe1cf4d5" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import selectnotestest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="5c2e9358-e2ff-46d4-b0a1-dc7006a75fb0" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="23a0f7b8-1407-44dc-b8b0-5c9ece032273" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="put_note_id-test" doc:id="8d437f53-1f0e-474f-8367-5d04b6d24cce" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Update" doc:id="51f53a5b-914b-4281-9e8c-1c5debadd37e" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="87b50600-bc7b-4166-b006-2c1fbd1a9499" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://putnoteidtest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://putnoteidtest\mock_variable_.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="439f4413-9f79-4457-a61a-7766ae03980a" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://putnoteidtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://putnoteidtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://putnoteidtest\set-event_variable_.dwl')]" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to put_note_id" doc:id="080dcec0-c229-4858-b6ca-0aa0c6d56406" name="put_note_id"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="09f39c62-d9a1-400e-9b7a-a10a7aa043a0" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import putnoteidtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Logger" doc:id="782fb31b-ceae-4be0-8c3f-28bb8d7aca69" processor="logger" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9f5430b9-9c5c-4318-9e5d-00333eac3bca" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
